@@ -1,30 +1,16 @@
 import random
 
-n = int(input('Введите длину массива '))
-arr = []
-i = 0
-
-while i < n:
-    arr.append(random.randrange(-20, 21))
-    i += 1
-
-print('Массив до сортировки ', arr)
-
 #В сортировке Шелла происходит сортировка вставками, но соритруются
 #конкретные подмассивы, расстоянии между элементами которых равно d,
 #где d = n // 2 , при чём с каждой итерацией d уменьшается вдвое, пока не станет равен нулю
 
-d = n // 2
 
-
-
-
-#На вход массив arr {7, 6, 5, 4, 3, 2, 1}
+#На вход массив arr
 #start - позиция, с которой нужно начать сдвигать элементы право на шаг step
 #lastIndex - последняя позиция, которую надо сдвинуть вправо
 #[start; lastIndex]
-def shiftRight(arr, start, lastIndex, step):
-    i = lastIndex
+def shift_right(arr, start, last_index, step):
+    i = last_index
     while i >= start:
         arr[i + step] = arr[i]
         i -= step
@@ -32,31 +18,38 @@ def shiftRight(arr, start, lastIndex, step):
 #arr - исходный массив, который сортируем. start - индекс первого элемента, который будем сортировать.
 #finish - индекс последнего элемента(не включительно). step - шаг, с которым мы будем просматривать элементы в списке, начиная со start
 #Сортирует только один конкретный подмассив
-def insertionSort(arr, start, finish, step):
-    lastIndex = start + step
-    while lastIndex < finish:
-        cursor = lastIndex - step
-        while (arr[cursor] > arr[lastIndex]) and (cursor != start):
+def insertion_sort(arr, start, finish, step):
+    last_index = start + step
+    while last_index < finish:
+        cursor = last_index - step
+        while (arr[cursor] > arr[last_index]) and (cursor != start):
             cursor -= step
 
-        if (arr[cursor] > arr[lastIndex]) and (cursor == start):
-            temp = arr[lastIndex]
-            shiftRight(arr, 0, lastIndex - step, step)
+        if (arr[cursor] > arr[last_index]) and (cursor == start):
+            temp = arr[last_index]
+            shift_right(arr, 0, last_index - step, step)
             arr[cursor] = temp
-        elif (arr[cursor] <= arr[lastIndex]):
+        elif (arr[cursor] <= arr[last_index]):
             cursor += step
-            temp = arr[lastIndex]
-            shiftRight(arr, cursor, lastIndex - step, step)
+            temp = arr[last_index]
+            shift_right(arr, cursor, last_index - step, step)
             arr[cursor] = temp
-        lastIndex = lastIndex + step
+        last_index += step
 
+n = int(input('Введите длину массива: '))
+arr = [random.randrange(-20, 21) for _ in range(n)]
+print('Массив до сортировки: ', arr)
 
+d = n // 2
 while d > 0:
-    i = 0
-    while i < d:
-        insertionSort(arr, i, n, d)
-        i += 1
-    d = d //2
+    for i in range(d):
+        insertion_sort(arr, i, n, d)
+    d //= 2
+
+print('Массив после частичной сортировки: ', arr)
 
 
-print('Массив после частичной сортировки ', arr)
+
+
+
+
