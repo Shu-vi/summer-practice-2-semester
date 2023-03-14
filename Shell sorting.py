@@ -46,7 +46,7 @@ while d > 0:
         insertion_sort(arr, i, n, d)
     d //= 2
 
-print('Массив после частичной сортировки: ', arr)
+print('Массив после сортировки: ', arr)
 
 
 
