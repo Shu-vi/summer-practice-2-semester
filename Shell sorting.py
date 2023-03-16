@@ -27,7 +27,7 @@ def insertion_sort(arr, start, finish, step):
 
         if (arr[cursor] > arr[last_index]) and (cursor == start):
             temp = arr[last_index]
-            shift_right(arr, 0, last_index - step, step)
+            shift_right(arr, start, last_index - step, step)
             arr[cursor] = temp
         elif (arr[cursor] <= arr[last_index]):
             cursor += step
