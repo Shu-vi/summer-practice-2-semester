@@ -70,24 +70,29 @@ class RedBlackTree:
                     uncle.color = 'black'
                     node.parent.parent.color = 'red'
                     node = node.parent.parent
-                else: #Если дяди нет или он не красный
-                    if node == node.parent.right:# если сын справа от красного родителя
+                else: #Если дядя чёрный
+                    #Случай 2. Папа слева от дедушки. Сын справа от папы
+                    if node == node.parent.right:
                         node = node.parent
                         self.__rotate_left(node)
+                    #Случай 3. Папа слева от дедушки, сын слева от папы
                     node.parent.color = 'black'
                     node.parent.parent.color = 'red'
                     self.__rotate_right(node.parent.parent)
             else: #Если отец справа от дедушки
                 uncle = node.parent.parent.left
                 if uncle is not None and uncle.color == 'red':# Если дядя красный
+                    #Случай 1. Красный дядя
                     node.parent.color = 'black'
                     uncle.color = 'black'
                     node.parent.parent.color = 'red'
                     node = node.parent.parent
-                else: # Если дяди нет или он не красный
+                else: # Если дяди чёрный
+                    #Случай 2. Отец справа от дедушки. Сын слева от отца
                     if node == node.parent.left:# Если сын слева от отца
                         node = node.parent
                         self.__rotate_right(node)
+                    #Случай 3. Отец справа от дедушки. Сын справа от отца
                     node.parent.color = 'black'
                     node.parent.parent.color = 'red'
                     self.__rotate_left(node.parent.parent)
