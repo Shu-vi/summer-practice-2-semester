@@ -40,12 +40,15 @@ n = int(input('Введите длину массива: '))
 arr = [random.randrange(-20, 21) for _ in range(n)]
 print('Массив до сортировки: ', arr)
 
+print('--Промежуточные результаты начало--')
 d = n // 2
 while d > 0:
     for i in range(d):
         insertion_sort(arr, i, n, d)
+    print('При d = ', d, ' массив после сортировки стал')
+    print(arr)
     d //= 2
-
+print('--Промежуточные результаты конец--')
 print('Массив после сортировки: ', arr)
 
 

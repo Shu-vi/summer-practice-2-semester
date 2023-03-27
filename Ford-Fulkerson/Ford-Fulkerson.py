@@ -83,11 +83,16 @@ class Graph:
 
     def get_max_total_flow(self) -> int:
         max_total_flow = 0
+        print('--Промежуточные результаты начало--')
         while self.__is_has_routes():
             route = self.__find_route()
+            print('Найденный маршрут из истока в сток: ', route)
             min_flow = self.__find_min_flow(route)
+            print('Минимальный поток на этом маршруте: ', min_flow)
             self.__subtruct_min_from_route(route, min_flow)
             max_total_flow += min_flow
+            print('Максимальная пропускная способности сети стала: ', max_total_flow)
+        print('--Промежуточные результаты конец--')
         return max_total_flow
     
     #Рандомно заполняем мощности 
