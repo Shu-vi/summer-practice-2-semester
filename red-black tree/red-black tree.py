@@ -31,11 +31,17 @@ class Node:
 
 class RedBlackTree:
     def __init__(self):
-        self.root = None
+        self.NIL = Node(99999)
+        self.NIL.color = 'black'
+        self.NIL.left = None
+        self.NIL.right = None
+        self.root = self.NIL
 
     def insert(self, value):
         new_node = Node(value)
-        if self.root is None:
+        new_node.left = self.NIL
+        new_node.right = self.NIL
+        if self.root == self.NIL:
             self.root = new_node
             self.root.color = 'black'
             return
@@ -46,21 +52,30 @@ class RedBlackTree:
         else:
             node.right = new_node
             new_node.parent = node
-        self.__fix_violation(new_node)
+        self.__fix_insert(new_node)
 
     def __search_place(self, node, value):
-        if node is None:
-            return None
         if value <= node.value:
-            if node.left is None:
+            if node.left == self.NIL:
                 return node
             return self.__search_place(node.left, value)
         else:
-            if node.right is None:
+            if node.right == self.NIL:
                 return node
             return self.__search_place(node.right, value)
 
-    def __fix_violation(self, node):
+
+    def __search_node(self, value):
+        node = self.root
+        while node != self.NIL:
+            if value == node.value:
+                return node
+            if value < node.value:
+                node = node.left
+            else:
+                node = node.right
+
+    def __fix_insert(self, node):
         while node.parent is not None and node.parent.color == 'red': #Если родитель красный и он существует
             if node.parent == node.parent.parent.left: # если отец слева от дедушки
                 uncle = node.parent.parent.right
@@ -101,7 +116,7 @@ class RedBlackTree:
     def __rotate_right(self, node):
         left = node.left
         node.left = left.right
-        if left.right is not None:
+        if left.right != self.NIL:
             left.right.parent = node
         left.parent = node.parent
         if node.parent is None:
@@ -117,7 +132,7 @@ class RedBlackTree:
     def __rotate_left(self, node):
         right = node.right
         node.right = right.left
-        if right.left is not None:
+        if right.left != self.NIL:
             right.left.parent = node
         right.parent = node.parent
         if node.parent is None:
@@ -131,26 +146,140 @@ class RedBlackTree:
 
     #0 - лево, 1 - право
     def print_tree(self):
+        if self.root == self.NIL:
+            print('Дерево пусто')
+            return
         nodes = [(self.root, [])]
         while nodes:
             current_node, path = nodes.pop()
             print('Значение узла: ', current_node.value, '; цвет узла: ', current_node.color, '; двоичная последовательность: ', path)
-            if current_node.left:
+            if current_node.left != self.NIL:
                 nodes.append((current_node.left, path + [0]))
-            if current_node.right:
+            if current_node.right != self.NIL:
                 nodes.append((current_node.right, path + [1]))
-    
+
+    def __delete_fix(self, node):
+            while node != self.root and node.color == 'black':
+                if node == node.parent.left:
+                    nodes_brother = node.parent.right
+                    # 1 случай
+                    if nodes_brother.color == 'red':
+                        nodes_brother.color = 'black'
+                        node.parent.color = 'red'
+                        self.__rotate_left(node.parent)
+                        nodes_brother = node.parent.right
+                    # 2 случай
+                    if nodes_brother.left.color == 'black' and nodes_brother.right.color == 'black':
+                        nodes_brother.color = 'red' 
+                        node = node.parent
+                    else:
+                        # 3 случай
+                        if nodes_brother.right.color == 'black':
+                            nodes_brother.left.color = 'black'
+                            nodes_brother.color = 'red'
+                            self.__rotate_right(nodes_brother)
+                            nodes_brother = node.parent.right
+                        # 4 случай
+                        nodes_brother.color = node.parent.color 
+                        node.parent.color = 'black' 
+                        nodes_brother.right.color = 'black' 
+                        self.__rotate_left(node.parent)
+                        node = self.root
+                else:
+                    nodes_brother = node.parent.left
+                    # 1 случай
+                    if nodes_brother.color == 'red':
+                        nodes_brother.color = 'black'
+                        node.parent.color = 'red'
+                        self.__rotate_right(node.parent)
+                        nodes_brother = node.parent.left
+                    # 2 случай
+                    if nodes_brother.right.color == 'black' and nodes_brother.left.color == 'black':
+                        nodes_brother.color = 'red' 
+                        node = node.parent 
+                    else:
+                        # 3 случай
+                        if nodes_brother.left.color == 'black':
+                            nodes_brother.right.color = 'black'
+                            nodes_brother.color = 'red'
+                            self.__rotate_left(nodes_brother)
+                            nodes_brother = node.parent.left
+                        # 4 случай
+                        nodes_brother.color = node.parent.color 
+                        node.parent.color = 'black' 
+                        nodes_brother.left.color = 'black' 
+                        self.__rotate_right(node.parent)
+                        node = self.root
+            node.color = 'black'
+
+    def delete(self, value):
+        node = self.__search_node(value)
+        if node == self.NIL:
+            return
+
+        temp = node
+        temp_orig_color = temp.color 
+        
+        # 1 случай
+        if node.left == self.NIL:
+            temp_2 = node.right 
+            self.__transplant(node, node.right)
+        # 2 случай
+        elif node.right == self.NIL:
+            temp_2 = node.left
+            self.__transplant(node, node.left)
+        # 3 случай
+        else:
+            temp = self.__minimum(node.right)
+            temp_orig_color = temp.color
+            temp_2 = temp.right 
             
+            if temp.parent == node:
+                temp_2.parent = temp
+            else:
+                self.__transplant(temp, temp.right)
+                temp.right = node.right
+                temp.right.parent = temp
+            
+            self.__transplant(node, temp)
+            temp.left = node.left 
+            temp.left.parent = temp 
+            temp.color = node.color
+        if temp_orig_color == 'black':
+            self.__delete_fix(temp_2)
+
+    #Функция забывает о корне node_1, вешая на его место корень node_2
+    def __transplant(self, node_1, node_2):
+        if node_1.parent == None:
+            self.root = node_2
+        elif node_1 == node_1.parent.left:
+            node_1.parent.left = node_2 
+        else:
+            node_1.parent.right = node_2
+        node_2.parent = node_1.parent
+
+    def __minimum(self, node):
+        while node.left != self.NIL:
+            node = node.left
+        return node
 
 
+rbt = RedBlackTree()
 
 
-
-rbd = RedBlackTree()
 n = int(input('Введите количество чисел, которые необходимо вставить в дерево '))
-for i in range(n):
-    j = random.randrange(0, 50)
-    rbd.insert(j)
-    print('Вставили число ', j)
 
-rbd.print_tree()
+for i in range(n):
+    rbt.insert(random.randrange(0, 50))
+
+rbt.print_tree()
+
+inp = ''
+while True:
+    inp = str(input('Введите номер числа, которое хотите удалить из дерева. Для выхода введите "Выход" '))
+    if inp!= 'Выход':
+        inp = int(inp)
+    else:
+        exit(0)
+    rbt.delete(inp)
+    rbt.print_tree()
