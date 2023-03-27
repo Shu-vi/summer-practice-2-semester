@@ -1,5 +1,6 @@
-
+import random
 """
+    Алгоритм Форда Фалкерсона
     Пусть граф задаётся двумерным массивом
     {
     {Состояние_из_которого_переходят1, состояние_в_которое_переходят1, мощность потока1}
@@ -89,6 +90,15 @@ class Graph:
             max_total_flow += min_flow
         return max_total_flow
     
+    #Рандомно заполняем мощности 
+    def randomize_flow_in_transition_table(self):
+        for i in range(len(self.__transition_table)):
+            self.__transition_table[i][2] = random.randrange(0, 13)
+
+    #Печатаем таблицу переходов        
+    def print_transition_table(self):
+        for i in range(len(self.__transition_table)):
+            print(self.__transition_table[i])
 transition_table_1 = [
     [0, 1, 10],
     [1, 2, 5],
@@ -115,7 +125,13 @@ transition_table_2 = [
 ]
 
 g = Graph(transition_table_1, 0, 6)
-print(g.get_max_total_flow())
+g.randomize_flow_in_transition_table()
+g.print_transition_table()
+print('Максимальная пропускная способность графа из истока в сток', g.get_max_total_flow())
 
+
+print('------------------------------')
 g = Graph(transition_table_2, 0, 3)
-print(g.get_max_total_flow())
+g.randomize_flow_in_transition_table()
+g.print_transition_table()
+print('Максимальная пропускная способность графа из истока в сток', g.get_max_total_flow())
