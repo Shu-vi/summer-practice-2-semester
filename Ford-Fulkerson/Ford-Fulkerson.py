@@ -71,7 +71,8 @@ class Graph:
         while stack:
             is_found_node = False
             for i in self.__transition_table:
-                if (i[0] == stack[len(stack) - 1]) and (not i[1] in visited) and self.__is_can_move(i[0], i[1]):
+                #Если вершина, из которой мы идём - последняя добавленная И вершина в которую мы идём, ещё не посещена И
+                if (i[0] == stack[len(stack) - 1]) and (not i[1] in visited) and self.__is_can_move(i[0], i[1]):#Можно передвигаться 
                     visited.add(i[1])
                     stack.append(i[1])
                     is_found_node = True
@@ -130,13 +131,13 @@ transition_table_2 = [
 ]
 
 g = Graph(transition_table_1, 0, 6)
-g.randomize_flow_in_transition_table()
+#g.randomize_flow_in_transition_table()
 g.print_transition_table()
 print('Максимальная пропускная способность графа из истока в сток', g.get_max_total_flow())
 
 
 print('------------------------------')
 g = Graph(transition_table_2, 0, 3)
-g.randomize_flow_in_transition_table()
+#g.randomize_flow_in_transition_table()
 g.print_transition_table()
 print('Максимальная пропускная способность графа из истока в сток', g.get_max_total_flow())

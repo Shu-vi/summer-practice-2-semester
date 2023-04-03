@@ -162,24 +162,24 @@ class RedBlackTree:
             while node != self.root and node.color == 'black':
                 if node == node.parent.left:
                     nodes_brother = node.parent.right
-                    # 1 случай
+                    # 1 случай брат красный
                     if nodes_brother.color == 'red':
                         nodes_brother.color = 'black'
                         node.parent.color = 'red'
                         self.__rotate_left(node.parent)
                         nodes_brother = node.parent.right
-                    # 2 случай
+                    # 2 случай оба ребёнка брата чёрные
                     if nodes_brother.left.color == 'black' and nodes_brother.right.color == 'black':
                         nodes_brother.color = 'red' 
                         node = node.parent
                     else:
-                        # 3 случай
+                        # 3 случай правый ребенок брата чёрный
                         if nodes_brother.right.color == 'black':
                             nodes_brother.left.color = 'black'
                             nodes_brother.color = 'red'
                             self.__rotate_right(nodes_brother)
                             nodes_brother = node.parent.right
-                        # 4 случай
+                        # 4 случай правый ребенок брата красный
                         nodes_brother.color = node.parent.color 
                         node.parent.color = 'black' 
                         nodes_brother.right.color = 'black' 
@@ -187,24 +187,24 @@ class RedBlackTree:
                         node = self.root
                 else:
                     nodes_brother = node.parent.left
-                    # 1 случай
+                    # 1 случай брат красный
                     if nodes_brother.color == 'red':
                         nodes_brother.color = 'black'
                         node.parent.color = 'red'
                         self.__rotate_right(node.parent)
                         nodes_brother = node.parent.left
-                    # 2 случай
+                    # 2 случай оба ребёнка брата чёрные
                     if nodes_brother.right.color == 'black' and nodes_brother.left.color == 'black':
                         nodes_brother.color = 'red' 
                         node = node.parent 
                     else:
-                        # 3 случай
+                        # 3 случай случай правый ребенок брата чёрный
                         if nodes_brother.left.color == 'black':
                             nodes_brother.right.color = 'black'
                             nodes_brother.color = 'red'
                             self.__rotate_left(nodes_brother)
                             nodes_brother = node.parent.left
-                        # 4 случай
+                        # 4 случай правый ребенок брата красный
                         nodes_brother.color = node.parent.color 
                         node.parent.color = 'black' 
                         nodes_brother.left.color = 'black' 
