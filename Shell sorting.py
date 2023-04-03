@@ -5,6 +5,12 @@ import random
 #где d = n // 2 , при чём с каждой итерацией d уменьшается вдвое, пока не станет равен нулю
 
 
+def print_array(message, arr):
+    result = message
+    for i in range(len(arr)):
+        result += "  " + str(arr[i])
+    print(result)
+
 #На вход массив arr
 #start - позиция, с которой нужно начать сдвигать элементы право на шаг step
 #lastIndex - последняя позиция, которую надо сдвинуть вправо
@@ -38,18 +44,14 @@ def insertion_sort(arr, start, finish, step):
 
 n = int(input('Введите длину массива: '))
 arr = [random.randrange(-20, 21) for _ in range(n)]
-print('Массив до сортировки: ', arr)
+print_array("Массив до сортировки: ", arr)
 
-print('--Промежуточные результаты начало--')
 d = n // 2
 while d > 0:
     for i in range(d):
         insertion_sort(arr, i, n, d)
-    print('При d = ', d, ' массив после сортировки стал')
-    print(arr)
     d //= 2
-print('--Промежуточные результаты конец--')
-print('Массив после сортировки: ', arr)
+print_array("Массив после сортировки: ", arr)
 
 
 

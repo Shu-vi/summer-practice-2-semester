@@ -11,6 +11,12 @@ import random
     и номерами двух вершин - истока и стока
 """
 
+def print_array(message, arr):
+    result = message
+    for i in range(len(arr)):
+        result += "  " + str(arr[i])
+    print(result)
+
 class Graph:
     def __init__(self, transition_table, source_node, stock_node):
         self.__transition_table = transition_table
@@ -84,16 +90,11 @@ class Graph:
 
     def get_max_total_flow(self) -> int:
         max_total_flow = 0
-        print('--Промежуточные результаты начало--')
         while self.__is_has_routes():
             route = self.__find_route()
-            print('Найденный маршрут из истока в сток: ', route)
             min_flow = self.__find_min_flow(route)
-            print('Минимальный поток на этом маршруте: ', min_flow)
             self.__subtruct_min_from_route(route, min_flow)
             max_total_flow += min_flow
-            print('Максимальная пропускная способности сети стала: ', max_total_flow)
-        print('--Промежуточные результаты конец--')
         return max_total_flow
     
     #Рандомно заполняем мощности 
@@ -104,7 +105,7 @@ class Graph:
     #Печатаем таблицу переходов        
     def print_transition_table(self):
         for i in range(len(self.__transition_table)):
-            print(self.__transition_table[i])
+            print_array("", self.__transition_table[i])
 transition_table_1 = [
     [0, 1, 10],
     [1, 2, 5],
@@ -131,13 +132,11 @@ transition_table_2 = [
 ]
 
 g = Graph(transition_table_1, 0, 6)
-#g.randomize_flow_in_transition_table()
+g.randomize_flow_in_transition_table()
 g.print_transition_table()
 print('Максимальная пропускная способность графа из истока в сток', g.get_max_total_flow())
-
-
-print('------------------------------')
+print()
 g = Graph(transition_table_2, 0, 3)
-#g.randomize_flow_in_transition_table()
+g.randomize_flow_in_transition_table()
 g.print_transition_table()
 print('Максимальная пропускная способность графа из истока в сток', g.get_max_total_flow())

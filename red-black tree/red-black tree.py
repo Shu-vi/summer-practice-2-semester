@@ -21,6 +21,15 @@ import random
         Добавляем элемент
         Балансируем, после добавления
 """
+
+def get_array(arr):
+    if len(arr) == 0:
+        return "root"
+    result = ""
+    for i in range(len(arr)):
+        result += str(arr[i])
+    return result
+
 class Node:
     def __init__(self, value, color='red'):
         self.value = value
@@ -74,6 +83,7 @@ class RedBlackTree:
                 node = node.left
             else:
                 node = node.right
+        return self.NIL
 
     def __fix_insert(self, node):
         while node.parent is not None and node.parent.color == 'red': #Если родитель красный и он существует
@@ -152,11 +162,12 @@ class RedBlackTree:
         nodes = [(self.root, [])]
         while nodes:
             current_node, path = nodes.pop()
-            print('Значение узла: ', current_node.value, '; цвет узла: ', current_node.color, '; двоичная последовательность: ', path)
-            if current_node.left != self.NIL:
-                nodes.append((current_node.left, path + [0]))
+            print('Значение узла: ', current_node.value, '; цвет узла: ', current_node.color, '; двоичная последовательность: ', get_array(path))
             if current_node.right != self.NIL:
                 nodes.append((current_node.right, path + [1]))
+            if current_node.left != self.NIL:
+                nodes.append((current_node.left, path + [0]))
+
 
     def __delete_fix(self, node):
             while node != self.root and node.color == 'black':
@@ -215,7 +226,7 @@ class RedBlackTree:
     def delete(self, value):
         node = self.__search_node(value)
         if node == self.NIL:
-            return
+            return False
 
         temp = node
         temp_orig_color = temp.color 
@@ -276,10 +287,14 @@ rbt.print_tree()
 
 inp = ''
 while True:
-    inp = str(input('Введите номер числа, которое хотите удалить из дерева. Для выхода введите "Выход" '))
-    if inp!= 'Выход':
-        inp = int(inp)
-    else:
+    inp = str(input('Введите "Добавить", если хотите добавить новый элемент в дерево. Введите "Удалить", если хотите удалить элемент из дерева. Введите "Выход", если хотите завершить выполнение программы '))
+    if inp == "Добавить":
+        inp = int(input('Введите значение узла, который хотите добавить '))
+        rbt.insert(inp)
+        rbt.print_tree()
+    elif inp == "Удалить":
+        inp = int(input('Введите значение узла, который хотите удалить '))
+        rbt.delete(inp)
+        rbt.print_tree()
+    elif inp == "Выход":
         exit(0)
-    rbt.delete(inp)
-    rbt.print_tree()
